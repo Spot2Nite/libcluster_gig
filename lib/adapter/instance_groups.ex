@@ -58,7 +58,7 @@ defmodule Cluster.Strategy.Adapter.InstanceGroups do
             |> Enum.map(fn %Instance{name: name, zone: zone} ->
               %{"zones" => zone} = Regex.named_captures(~r/.*\/(?<zones>.*)$/, zone)
 
-              :"#{release_name}@#{name}@#{zone}"
+              :"#{release_name}@#{name}.c.#{zone}.#{project}.internal"
             end)
           end)
           |> List.flatten()
