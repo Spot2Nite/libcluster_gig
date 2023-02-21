@@ -8,59 +8,62 @@ defmodule Cluster.Strategy.Adapter.InstanceGroups do
   """
   @behaviour Cluster.Strategy.Adapter
   alias GoogleApi.Compute.V1.Connection
-  alias GoogleApi.Compute.V1.Model.InstanceGroupsListInstances
-  alias GoogleApi.Compute.V1.Model.InstanceWithNamedPorts
-  alias GoogleApi.Compute.V1.Api
+  alias GoogleApi.Compute.V1.Api.Instances
+
+  alias GoogleApi.Compute.V1.Model.{
+    Instance,
+    InstanceAggregatedList,
+    InstancesScopedList
+  }
 
   require Logger
 
   @doc """
   return a list of compute instances, available in the specified topology
   """
-  def get_nodes(release_name, config),
-    do:
+  def get_nodes(release_name, %{project: project}) do
+    _ =
       get_instance_group_nodes(
         release_name,
-        config[:project],
-        config[:zone],
-        config[:instance_group]
+        project
       )
+  end
 
   defp get_instance_group_nodes(
          release_name,
-         project,
-         zone,
-         instance_group
+         project
        ) do
     conn = get_access_token() |> Connection.new()
 
     instances =
-      Api.InstanceGroups.compute_instance_groups_list_instances(
+      Instances.compute_instances_aggregated_list(
         conn,
-        project,
-        zone,
-        String.trim(instance_group)
+        project
       )
 
     case instances do
-      {:ok, %InstanceGroupsListInstances{items: items}} when is_list(items) ->
+      {:ok, %InstanceAggregatedList{items: items}} ->
         nodes =
           items
           |> Enum.filter(fn
-            %InstanceWithNamedPorts{status: "RUNNING"} -> true
+            {_zone, %{warning: nil}} -> true
             _ -> false
           end)
-          |> Enum.map(fn %InstanceWithNamedPorts{instance: instance} ->
-            %{"instance_name" => instance_name} =
-              Regex.named_captures(~r/.*\/(?<instance_name>.*)$/, instance)
+          |> Enum.map(fn {_zone, %InstancesScopedList{instances: instances}} ->
+            instances
+            |> Enum.filter(fn
+              %Instance{status: "RUNNING"} -> true
+              _ -> false
+            end)
+            |> Enum.map(fn %Instance{name: name, zone: zone} ->
+              %{"zones" => zone} = Regex.named_captures(~r/.*\/(?<zones>.*)$/, zone)
 
-            :"#{release_name}@#{instance_name}"
+              :"#{release_name}@#{name}@#{zone}"
+            end)
           end)
+          |> List.flatten()
 
         {:ok, nodes}
-
-      {:ok, %InstanceGroupsListInstances{}} ->
-        {:ok, []}
 
       e ->
         Logger.error(inspect(e))
