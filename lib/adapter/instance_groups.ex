@@ -21,11 +21,11 @@ defmodule Cluster.Strategy.Adapter.InstanceGroups do
   @doc """
   return a list of compute instances, available in the specified topology
   """
-  def get_nodes(release_name, %{project: project}) do
+  def get_nodes(release_name, config) do
     _ =
       get_instance_group_nodes(
         release_name,
-        project
+        config[:project]
       )
   end
 
