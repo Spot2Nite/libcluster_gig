@@ -54,7 +54,7 @@ defmodule Cluster.Strategy.Adapter.InstanceGroups do
             %{"instance_name" => instance_name} =
               Regex.named_captures(~r/.*\/(?<instance_name>.*)$/, instance)
 
-            :"#{release_name}@#{instance_name}.#{zone}.#{project}.internal"
+            :"#{release_name}@#{instance_name}.#{zone}.c.#{project}.internal"
           end)
 
         {:ok, nodes}
