@@ -1,9 +1,9 @@
-# A simple libcluster strategy for Google Instance Groups
+# A simple libcluster strategy for Google Instance
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `libcluster_gig` to your list of dependencies in `mix.exs`:
+If [available in Hex](https://hex.pm/docs/publish), the package can be installed by adding `libcluster_gig` to your list
+of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,11 +15,15 @@ end
 
 ## Setup
 
-This library is using the Google APIs to call various services, and you'll need to provide an access token. Excerpt from [Google's API docs](https://github.com/googleapis/elixir-google-api), in relation to obtaining an Access Token
+This library is using the Google APIs to call various services, and you'll need to provide an access token. Excerpt from
+[Google's API docs](https://github.com/googleapis/elixir-google-api), in relation to obtaining an Access Token
 
 ### Service Accounts
 
-Authentication is typically done through Application Default Credentials which means you do not have to change the code to authenticate as long as your environment has credentials. Start by creating a Service Account key file. This file can be used to authenticate to Google Cloud Platform services from any environment. To use the file, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path to the key file, for example:
+Authentication is typically done through Application Default Credentials which means you do not have to change the code
+to authenticate as long as your environment has credentials. Start by creating a Service Account key file. This file can
+be used to authenticate to Google Cloud Platform services from any environment. To use the file, set the
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path to the key file, for example:
 
 ```sh
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
@@ -91,14 +95,11 @@ That's it™
 
 Copyright 2020-2021 Florin T.Patrascu
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
+License. You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+language governing permissions and limitations under the License.
